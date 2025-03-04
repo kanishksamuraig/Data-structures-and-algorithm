@@ -1,117 +1,55 @@
 #include <iostream>
-#include <ostream>
 #include <vector>
-#include "vector"
-#include <queue>
-class Graph
+using namespace std;
+void addedge(vector<vector<int>> &graph, int s, int d)
 {
-public:
-    std::vector<std::vector<int>> list;
-    int nVertices;
-    int nEdges;
-    Graph(int nVertices, int NEdges)
-    {
-        this->nVertices = nVertices;
-        this->nEdges = NEdges;
-        list.resize(nVertices);
-    }
-    void inputGraph()
-    {
-        std::cout << "Enter the edge in this format" << std::endl;
-        for (int i = 0; i < this->nEdges; i++)
-        {
-            int u, v;
-            std::cin >> u >> v;
-            list[u - 1].push_back(v - 1);
-            // list[v - 1].push_back(u - 1);
-        }
-    }
-    void displayGraph()
-    {
-        for (int i = 0; i < nVertices; i++)
-        {
-            std::cout << i << ":";
-            for (int j : list[i])
-            {
-                std::cout << j << " ";
-            }
-            std::cout << "\n";
-        }
-    }
-    std::vector<int> inDegree()
-    {
-        std::vector<int> res(nVertices, 0);
-        for (int i = 0; i < nVertices; i++)
-        {
-            for (std::vector<int> v : list)
-            {
-                for (int neighbours : v)
-                {
-                    if (neighbours == i)
-                        res[i]++;
-                }
-            }
-        }
-        return res;
-    }
-
-    std::vector<int> outDegree()
-    {
-        std::vector<int> res(nVertices, 0);
-        for (int i = 0; i < nVertices; i++)
-        {
-            res[i] = list[i].size();
-        }
-        return res;
-    }
-};
-
-void printList(std::vector<int> list)
+    graph[s - 1].push_back(d - 1);
+    graph[d - 1].push_back(s - 1);
+}
+void printgraph(vector<vector<int>> &graph, int v)
 {
-    for (int i = 0; i < list.size(); i++)
+    cout << endl;
+    for (int i = 0; i < v; i++)
     {
-        std::cout << i << ": " << list[i] << "\n";
+
+        cout << i + 1 << " : ";
+        for (int j : graph[i])
+        {
+            cout << j + 1 << "->";
+        }
+        cout << endl;
     }
 }
 
 int main()
 {
 
-    int nE, nV;
-    std::cout << "Input the graph\n";
-    std::cout << "Enter the number of vertices";
-    std::cin >> nV;
-    std::cout << "Enter the number of edges";
-    std::cin >> nE;
-
-    Graph *graph = new Graph(nV, nE);
-    graph->inputGraph();
-    std::cout << "Enter 1 to find the Indegree 2 to find the outdegree 3 to print the adjecency list";
-    int ch;
-    std::cin >> ch;
+    cout << "Enter the number of vertices:";
+    int v, x, s, d;
+    cin >> v;
+    vector<vector<int>> graph(v);
     while (true)
     {
-        switch (ch)
+        cout << "Enter the choices\n1) Add edge\n2)print graph\n3)exit\nEnter:";
+        cin >> x;
+        if (x == 3)
+        {
+            break;
+        }
+        switch (x)
         {
         case 1:
-        {
-            printList(graph->inDegree());
+            cout << "Enter the source and destination vertex";
+            cin >> s >> d;
+            addedge(graph, s, d);
+            printgraph(graph, v);
             break;
-        }
         case 2:
-        {
-            printList(graph->outDegree());
+            printgraph(graph, v);
+            break;
+        default:
+            cout << "Enter the correct choice!!!";
             break;
         }
-        case 3:
-        {
-            graph->displayGraph();
-            break;
-        }
-        }
-
-        std::cout << "Enter 1 to find the Indegree 2 to find the outdegree 3 to print the adjecency list";
-        std::cin >> ch;
     }
-    return 0;
 }

@@ -103,68 +103,76 @@ public:
         cout << endl;
     }
 
-    // Cycle Detection in Undirected Graph using DFS
-    bool dfsCycle(int node, int parent, vector<bool> &visited)
-    {
-        visited[node] = true;
-        for (int neighbor : adj[node])
-        {
-            if (!visited[neighbor])
-            {
-                if (dfsCycle(neighbor, node, visited))
-                {
-                    return true;
-                }
-            }
-            else if (neighbor != parent)
-            {
-                return true; // Cycle found
-            }
-        }
-        return false;
-    }
-
+    // Cycle Detection in Undirected Graph using BFS
     bool hasCycle()
     {
         vector<bool> visited(V, false);
+        vector<int> parent(V, -1);
+
         for (int i = 0; i < V; i++)
         {
             if (!visited[i])
             {
-                if (dfsCycle(i, -1, visited))
+                queue<int> q;
+                q.push(i);
+                visited[i] = true;
+
+                while (!q.empty())
                 {
-                    return true;
+                    int node = q.front();
+                    q.pop();
+
+                    for (int neighbor : adj[node])
+                    {
+                        if (!visited[neighbor])
+                        {
+                            visited[neighbor] = true;
+                            parent[neighbor] = node;
+                            q.push(neighbor);
+                        }
+                        else if (neighbor != parent[node])
+                        {
+                            return true; // Cycle detected
+                        }
+                    }
                 }
             }
         }
         return false;
     }
 
-    // Find Number of Connected Components
-    void dfs(int node, vector<bool> &visited)
-    {
-        visited[node] = true;
-        for (int neighbor : adj[node])
-        {
-            if (!visited[neighbor])
-            {
-                dfs(neighbor, visited);
-            }
-        }
-    }
-
+    // Find Number of Connected Components using BFS
     int countConnectedComponents()
     {
         vector<bool> visited(V, false);
         int count = 0;
+
         for (int i = 0; i < V; i++)
         {
             if (!visited[i])
             {
                 count++;
-                dfs(i, visited);
+                queue<int> q;
+                q.push(i);
+                visited[i] = true;
+
+                while (!q.empty())
+                {
+                    int node = q.front();
+                    q.pop();
+
+                    for (int neighbor : adj[node])
+                    {
+                        if (!visited[neighbor])
+                        {
+                            visited[neighbor] = true;
+                            q.push(neighbor);
+                        }
+                    }
+                }
             }
         }
+
         return count;
     }
 };
